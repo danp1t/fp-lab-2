@@ -1,6 +1,6 @@
 defmodule BinaryTreeBag do
   @moduledoc """
-  Реализация мультимножества на бинарном дереве.
+  Реализация bt-bag
   """
   def new(), do: nil
 
@@ -24,18 +24,18 @@ defmodule BinaryTreeBag do
   def remove(nil, _), do: nil
 
   def remove({:node, current, count, left, right}, value) do
-    if value < current do
-      {:node, current, count, remove(left, value), right}
-    else
-      if value > current do
+    cond do
+      value < current ->
+        {:node, current, count, remove(left, value), right}
+
+      value > current ->
         {:node, current, count, left, remove(right, value)}
-      else
-        if count > 1 do
-          {:node, current, count - 1, left, right}
-        else
-          merge_trees(left, right)
-        end
-      end
+
+      count > 1 ->
+        {:node, current, count - 1, left, right}
+
+      true ->
+        merge_trees(left, right)
     end
   end
 

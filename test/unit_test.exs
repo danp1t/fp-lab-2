@@ -5,7 +5,6 @@ defmodule UnitTest do
   alias BagFunction, as: BF
   alias Monoid, as: M
 
-  # Helper function to compare bags semantically
   defp bags_equal?(bag1, bag2) do
     Bag.to_list(bag1) |> Enum.sort() == Bag.to_list(bag2) |> Enum.sort()
   end
@@ -18,10 +17,11 @@ defmodule UnitTest do
     end
 
     test "add elements" do
-      bag = Bag.new()
-      |> Bag.add(5)
-      |> Bag.add(3)
-      |> Bag.add(5)
+      bag =
+        Bag.new()
+        |> Bag.add(5)
+        |> Bag.add(3)
+        |> Bag.add(5)
 
       assert Bag.empty?(bag) == false
       assert Bag.size(bag) == 3
@@ -30,11 +30,12 @@ defmodule UnitTest do
     end
 
     test "remove elements" do
-      bag = Bag.new()
-      |> Bag.add(5)
-      |> Bag.add(3)
-      |> Bag.add(5)
-      |> Bag.remove(5)
+      bag =
+        Bag.new()
+        |> Bag.add(5)
+        |> Bag.add(3)
+        |> Bag.add(5)
+        |> Bag.remove(5)
 
       assert Bag.count(bag, 5) == 1
       assert Bag.count(bag, 3) == 1
@@ -42,18 +43,20 @@ defmodule UnitTest do
     end
 
     test "remove non-existent element" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.remove(999)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.remove(999)
 
       assert Bag.size(bag) == 1
       assert Bag.count(bag, 1) == 1
     end
 
     test "check element membership" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.add(2)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.add(2)
 
       assert Bag.member?(bag, 1) == true
       assert Bag.member?(bag, 2) == true
@@ -63,11 +66,12 @@ defmodule UnitTest do
 
   describe "higher-order functions" do
     test "filter" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.add(2)
-      |> Bag.add(3)
-      |> Bag.add(1)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.add(2)
+        |> Bag.add(3)
+        |> Bag.add(1)
 
       filtered = BF.filter(bag, fn x -> rem(x, 2) == 0 end)
 
@@ -77,10 +81,11 @@ defmodule UnitTest do
     end
 
     test "map" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.add(2)
-      |> Bag.add(1)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.add(2)
+        |> Bag.add(1)
 
       mapped = BF.map(bag, fn x -> x * 2 end)
 
@@ -89,10 +94,11 @@ defmodule UnitTest do
     end
 
     test "left fold (foldl)" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.add(2)
-      |> Bag.add(3)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.add(2)
+        |> Bag.add(3)
 
       sum = BF.foldl(bag, 0, fn x, acc -> x + acc end)
       assert sum == 6
@@ -102,10 +108,11 @@ defmodule UnitTest do
     end
 
     test "right fold (foldr)" do
-      bag = Bag.new()
-      |> Bag.add(1)
-      |> Bag.add(2)
-      |> Bag.add(3)
+      bag =
+        Bag.new()
+        |> Bag.add(1)
+        |> Bag.add(2)
+        |> Bag.add(3)
 
       list = BF.foldr(bag, [], fn x, acc -> [x | acc] end)
       assert Enum.sum(list) == 6
@@ -141,11 +148,12 @@ defmodule UnitTest do
 
   describe "transformations" do
     test "convert to list and back" do
-      original_bag = Bag.new()
-      |> Bag.add(3)
-      |> Bag.add(1)
-      |> Bag.add(2)
-      |> Bag.add(1)
+      original_bag =
+        Bag.new()
+        |> Bag.add(3)
+        |> Bag.add(1)
+        |> Bag.add(2)
+        |> Bag.add(1)
 
       list = Bag.to_list(original_bag)
       new_bag = Bag.from_list(list)
@@ -177,9 +185,7 @@ defmodule UnitTest do
     end
 
     test "multiple additions and removals" do
-      bag = Bag.new()
-      |> Bag.add(1) |> Bag.add(1) |> Bag.add(1)
-      |> Bag.remove(1) |> Bag.remove(1)
+      bag = Bag.new() |> Bag.add(1) |> Bag.add(1) |> Bag.add(1) |> Bag.remove(1) |> Bag.remove(1)
 
       assert Bag.count(bag, 1) == 1
       assert Bag.size(bag) == 1
