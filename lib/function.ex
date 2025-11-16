@@ -4,6 +4,7 @@ defmodule BagFunction do
   """
   import BinaryTreeBag
 
+  # Фильтрация
   def filter(bag, predicate) do
     bag
     |> to_list()
@@ -11,6 +12,7 @@ defmodule BagFunction do
     |> from_list()
   end
 
+  # Отображение
   def map(bag, fun) do
     bag
     |> to_list()
@@ -18,6 +20,7 @@ defmodule BagFunction do
     |> from_list()
   end
 
+  # Свертка левая
   def foldl(bag, acc, fun) do
     do_foldl(bag, acc, fun)
   end
@@ -30,6 +33,7 @@ defmodule BagFunction do
     do_foldl(right, acc2, fun)
   end
 
+  # Свертка правая
   def foldr(bag, acc, fun) do
     do_foldr(bag, acc, fun)
   end

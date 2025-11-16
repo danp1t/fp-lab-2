@@ -4,11 +4,16 @@ defmodule BinaryTreeBag do
   """
   def new(), do: nil
 
+  # Проверка на пустое дерево
   def empty?(nil), do: true
   def empty?(_), do: false
 
+  # Добавление корня дерева
   def add(nil, value), do: {:node, value, 1, nil, nil}
 
+  # Добавление элемента в дерево
+  # current - текущее значение элемента
+  # count - количество элементов
   def add({:node, current, count, left, right}, value) do
     if value < current do
       {:node, current, count, add(left, value), right}
@@ -21,6 +26,7 @@ defmodule BinaryTreeBag do
     end
   end
 
+  # Удаление элемента из дерева
   def remove(nil, _), do: nil
 
   def remove({:node, current, count, left, right}, value) do
@@ -39,6 +45,7 @@ defmodule BinaryTreeBag do
     end
   end
 
+  # Объединение поддеревьев
   defp merge_trees(nil, right), do: right
   defp merge_trees(left, nil), do: left
 
@@ -65,6 +72,7 @@ defmodule BinaryTreeBag do
     {:node, value, count, remove_min(left), right}
   end
 
+  # Получение размера дерева
   def size(nil), do: 0
 
   def size({:node, _, count, left, right}) do
@@ -88,14 +96,15 @@ defmodule BinaryTreeBag do
   def count(nil, _), do: 0
 
   def count({:node, value, count, left, right}, target) do
-    if target < value do
-      count(left, target)
-    else
-      if target > value do
+    cond do
+      target < value ->
+        count(left, target)
+
+      target > value ->
         count(right, target)
-      else
+
+      target == value ->
         count
-      end
     end
   end
 
@@ -123,6 +132,7 @@ defmodule BinaryTreeBag do
     add_multiple(add(bag, value), value, count - 1)
   end
 
+  # Функция сравнения
   def equal?(nil, nil), do: true
   def equal?(nil, _), do: false
   def equal?(_, nil), do: false
