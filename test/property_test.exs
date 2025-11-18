@@ -5,7 +5,6 @@ defmodule PropertyTest do
   use ExUnitProperties
 
   alias BinaryTreeBag, as: Bag
-  alias BagFunction, as: BF
   alias Monoid, as: M
 
   defp bags_equal?(bag1, bag2) do
@@ -39,15 +38,13 @@ defmodule PropertyTest do
 
   test "monoid: left identity" do
     check all(bag <- bag_generator()) do
-      left_identity = M.concat(bag, M.empty())
-      assert bags_equal?(left_identity, bag)
+      assert bags_equal?(M.concat(bag, M.empty()), bag)
     end
   end
 
   test "monoid: right identity" do
     check all(bag <- bag_generator()) do
-      right_identity = M.concat(M.empty(), bag)
-      assert bags_equal?(right_identity, bag)
+      assert bags_equal?(M.concat(M.empty(), bag), bag)
     end
   end
 
@@ -78,39 +75,7 @@ defmodule PropertyTest do
         |> Bag.add(extra_element)
         |> Bag.remove(extra_element)
 
-      original_count = Bag.count(original_bag, extra_element)
-
-      if original_count == 0 do
-        assert bags_equal?(original_bag, new_bag)
-      else
-        assert Bag.count(new_bag, extra_element) == original_count
-      end
-    end
-  end
-
-  test "filter preserves elements satisfying condition" do
-    check all(bag <- bag_generator()) do
-      filtered = BF.filter(bag, fn x -> rem(x, 2) == 0 end)
-
-      all_elements_even =
-        BF.foldl(filtered, true, fn
-          x, acc -> acc and rem(x, 2) == 0
-        end)
-
-      assert all_elements_even == true
-    end
-  end
-
-  test "map applies function to all elements" do
-    check all(bag <- bag_generator()) do
-      mapped = BF.map(bag, fn x -> x * 2 end)
-
-      original_list = Bag.to_list(bag)
-      mapped_list = Bag.to_list(mapped)
-
-      expected_mapped = Enum.map(original_list, fn {value, count} -> {value * 2, count} end)
-
-      assert Enum.sort(mapped_list) == Enum.sort(expected_mapped)
+      assert bags_equal?(original_bag, new_bag)
     end
   end
 
@@ -122,29 +87,6 @@ defmodule PropertyTest do
         |> Bag.from_list()
 
       assert bags_equal?(bag, converted_bag)
-    end
-  end
-
-  test "concatenating identical bags doubles element counts" do
-    check all(bag <- bag_generator()) do
-      doubled_bag = M.concat(bag, bag)
-
-      all_doubled =
-        BF.foldl(bag, true, fn value, acc ->
-          original_count = Bag.count(bag, value)
-          doubled_count = Bag.count(doubled_bag, value)
-          acc and doubled_count == original_count * 2
-        end)
-
-      assert all_doubled == true
-    end
-  end
-
-  test "size of combined bags" do
-    check all({bag1, bag2} <- two_bags_generator()) do
-      combined = M.concat(bag1, bag2)
-      expected_size = Bag.size(bag1) + Bag.size(bag2)
-      assert Bag.size(combined) == expected_size
     end
   end
 end

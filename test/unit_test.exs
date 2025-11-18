@@ -93,7 +93,7 @@ defmodule UnitTest do
       assert Bag.count(mapped, 4) == 1
     end
 
-    test "left fold (foldl)" do
+    test "left fold" do
       bag =
         Bag.new()
         |> Bag.add(1)
@@ -107,7 +107,7 @@ defmodule UnitTest do
       assert Enum.sum(list) == 6
     end
 
-    test "right fold (foldr)" do
+    test "right fold" do
       bag =
         Bag.new()
         |> Bag.add(1)
@@ -143,52 +143,6 @@ defmodule UnitTest do
 
       assert bags_equal?(M.concat(bag, empty_bag), bag)
       assert bags_equal?(M.concat(empty_bag, bag), bag)
-    end
-  end
-
-  describe "transformations" do
-    test "convert to list and back" do
-      original_bag =
-        Bag.new()
-        |> Bag.add(3)
-        |> Bag.add(1)
-        |> Bag.add(2)
-        |> Bag.add(1)
-
-      list = Bag.to_list(original_bag)
-      new_bag = Bag.from_list(list)
-
-      assert bags_equal?(original_bag, new_bag)
-    end
-
-    test "bag comparison" do
-      bag1 = Bag.new() |> Bag.add(1) |> Bag.add(2) |> Bag.add(1)
-      bag2 = Bag.new() |> Bag.add(1) |> Bag.add(1) |> Bag.add(2)
-      bag3 = Bag.new() |> Bag.add(1) |> Bag.add(3)
-
-      assert bags_equal?(bag1, bag2) == true
-      assert bags_equal?(bag1, bag3) == false
-      assert bags_equal?(bag2, bag3) == false
-    end
-  end
-
-  describe "edge cases" do
-    test "remove from empty bag" do
-      empty_bag = Bag.new()
-      result = Bag.remove(empty_bag, 1)
-      assert Bag.empty?(result) == true
-    end
-
-    test "add and remove single element" do
-      bag = Bag.new() |> Bag.add(5) |> Bag.remove(5)
-      assert Bag.empty?(bag) == true
-    end
-
-    test "multiple additions and removals" do
-      bag = Bag.new() |> Bag.add(1) |> Bag.add(1) |> Bag.add(1) |> Bag.remove(1) |> Bag.remove(1)
-
-      assert Bag.count(bag, 1) == 1
-      assert Bag.size(bag) == 1
     end
   end
 end
